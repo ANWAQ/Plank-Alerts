@@ -16,6 +16,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.DrawManager;
 import net.runelite.client.util.ImageCapture;
 import net.runelite.client.util.ImageUploadStyle;
+import okhttp3.OkHttpClient;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -38,6 +39,9 @@ import static ANWAQ.plankalerts.RoomIdentifier.findRoom;
 public class PlankAlertsPlugin extends Plugin {
     @Inject
     private Client client;
+
+    @Inject
+    private OkHttpClient httpClient;
 
     @Inject
     private ImageCapture imageCapture;
@@ -131,7 +135,7 @@ public class PlankAlertsPlugin extends Plugin {
         ImageIO.write(screenshot, "png", screenshotOutput);
 
         if (config.webhookEnabled() && !config.webhookLink().equals("")) {
-            new DiscordWebHook().SendWebhook(screenshotOutput, fileName, config.webhookLink(), raidType, planker, NPC);
+            new DiscordWebHook().SendWebhook(screenshotOutput, fileName, config.webhookLink(), raidType, planker, NPC, httpClient);
         }
     }
 }

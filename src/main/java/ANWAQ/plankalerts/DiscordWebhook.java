@@ -1,5 +1,6 @@
 package ANWAQ.plankalerts;
 
+
 import okhttp3.*;
 
 import java.io.ByteArrayOutputStream;
@@ -8,7 +9,7 @@ import java.net.URLEncoder;
 
 class DiscordWebHook {
 
-    public void SendWebhook(ByteArrayOutputStream screenshotOutput, String fileName, String discordUrl, int raidType, String planker, RoomIdentifier.Mobs NPC) throws IOException {
+    public void SendWebhook(ByteArrayOutputStream screenshotOutput, String fileName, String discordUrl, int raidType, String planker, RoomIdentifier.Mobs NPC, OkHttpClient httpClient) throws IOException {
 
         String plankDesc = "**" + planker + "** just planked ";
 
@@ -84,8 +85,6 @@ class DiscordWebHook {
             plankDesc += "at TOB!";
         }
 
-        OkHttpClient client = new OkHttpClient();
-
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("payload_json", "{\"embeds\": [{\"title\": \"PLANK ALERT!\", \"description\": \"" + plankDesc + "\", \"color\": 95421, \"image\": {\"url\": \"attachment://" + URLEncoder.encode(fileName, "UTF-8") + ".png\"}}]}")
@@ -100,7 +99,7 @@ class DiscordWebHook {
                 .build();
 
         try {
-            client.newCall(request).execute();
+            httpClient.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
